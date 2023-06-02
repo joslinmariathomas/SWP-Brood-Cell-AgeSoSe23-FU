@@ -1,11 +1,15 @@
-import imageio.v2 as imageio
-import matplotlib.pyplot as plt
-import torch
 import os
 import json
+import uuid
+
+import torch
 import numpy as np
-import torchvision.transforms as transforms
-import torchvision.transforms.functional as functional
+import matplotlib.pyplot as plt
+
+from  imageio.v2 import imread
+from torchvision import transforms
+from torchvision.transforms import functional
+
 from helper_functions import (
     import_from_json,
     replace_image_extension
@@ -61,7 +65,7 @@ class Imageprocessor:
                 # raw_image = np.array(Image.open(img_name))
                 raw_image = plt.imread(filename)
             else:
-                raw_image = torch.from_numpy(imageio.imread(filename))
+                raw_image = torch.from_numpy(imread(filename))
         except Exception as e:
             print(e)
             return None
@@ -105,8 +109,9 @@ class Imageprocessor:
                                                                startY: endY,
                                                                startX: endX].permute(
                     2, 0, 1), ((startX, endX), (startY, endY)), (x, y))
-                cells.append(cell_indices)
-                json_image_cells[y][x]["image_data"] = cell_indices
+                cell_id = f"cell_id_{str(uuid.uuid4())}"
+                cells.append({"cell_index":cell_indices[2],"cell_id":cell_id,"cell_image":cell_indices[0].tolist()})
+                json_image_cells[y][x]["cell_id"] = cell_id
         return cells
 
     def getCellIndices(self):
@@ -127,7 +132,7 @@ class Imageprocessor:
 
 def main():
     jsonfile = import_from_json(filename="full_dataset_predictions.json")
-    ImageTransformer = Imageprocessor(
+    image_transformer = Imageprocessor(
         augmentTest=True,
         augmentTrain=True,
         augmentOriginal=True
@@ -141,15 +146,18 @@ def main():
                                  if
                                  frame[
                                      "filename"] in available_images]
+    cells_image_data =[]
     for filename in os.listdir(folder_path):
-        image = ImageTransformer.read_image(f"./Images/{filename}",
+        image = image_transformer.read_image(f"./Images/{filename}",
                                 "png", save=None)
         for json_image_labels in available_training_json:
             if json_image_labels["filename"] == filename:
-                cells = ImageTransformer.getCellsFromImage(image,json_image_labels["cells"])
-
+                cells = image_transformer.getCellsFromImage(image,json_image_labels["cells"])
+                cells_image_data.append(cells)
     with open("./full_dataset_predictions_updated.json", 'w') as f:
         json.dump(available_training_json, f)
+    with open("./cells_image_data.json", 'w') as f:
+        json.dump(cells_image_data, f)
 
 
 
