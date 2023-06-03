@@ -1,6 +1,6 @@
 import json
 import numpy as np
-
+from helper_functions import import_from_json
 # will be list of dictionaries that can be written to a json file
 output_data = []
 # 16 cols x 18 rows
@@ -8,11 +8,7 @@ new_egg_timestamps = np.full((18,16), -1.0)
 prev_states = np.full((18,16), '(empty)')
 
 
-def import_from_json():
-    with open('full_dataset_predictions.json') as f:
-        # loads data as list of dicts (list of frames)
-        frames = json.load(f)
-        return frames
+
 
 def iterate_frames(frames):
     for frame_ind in range(len(frames)):
@@ -53,7 +49,7 @@ def export_to_json(frames):
         
 
 def main():
-    frames = import_from_json()
+    frames = import_from_json(filename="full_dataset_predictions_updated.json")
     iterate_frames(frames)
     export_to_json(frames)
 

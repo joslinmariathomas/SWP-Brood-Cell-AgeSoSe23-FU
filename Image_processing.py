@@ -96,11 +96,11 @@ class Imageprocessor:
         cells = []
         for ((startX, endX), (startY, endY)), (x, y) in indices:
             if (not self.augmentTrain and not self.augmentTest):
-                cells.append((transforms.functional.resize(
+                cell_indices =(transforms.functional.resize(
                     image[startY: endY, startX: endX].permute(
                         2, 0, 1),
                     [self.resizedCellWidth, self.resizedCellHeight]),
-                              ((startX, endX), (startY, endY)), (x, y)))
+                              ((startX, endX), (startY, endY)), (x, y))
             else:
                 cell_indices = (transforms.functional.resize(
                     image[startY: endY, startX: endX].permute(2, 0, 1),
@@ -109,9 +109,13 @@ class Imageprocessor:
                                                                startY: endY,
                                                                startX: endX].permute(
                     2, 0, 1), ((startX, endX), (startY, endY)), (x, y))
-                cell_id = f"cell_id_{str(uuid.uuid4())}"
-                cells.append({"cell_index":cell_indices[2],"cell_id":cell_id,"cell_image":cell_indices[0].tolist()})
-                json_image_cells[y][x]["cell_id"] = cell_id
+            cell_id = f"cell_id_{str(uuid.uuid4())}"
+            cells.append(
+                {"cell_index":cell_indices[2],
+                 "cell_id":cell_id,
+                 "cell_image":cell_indices[0].tolist()}
+            )
+            json_image_cells[y][x]["cell_id"] = cell_id
         return cells
 
     def getCellIndices(self):
@@ -130,12 +134,13 @@ class Imageprocessor:
         return indices
 
 
+
 def main():
     jsonfile = import_from_json(filename="full_dataset_predictions.json")
     image_transformer = Imageprocessor(
-        augmentTest=True,
-        augmentTrain=True,
-        augmentOriginal=True
+        augmentTest=False,
+        augmentTrain=False,
+        augmentOriginal=False
 
     )
     json_file_extension_updated = replace_image_extension(jsonfile)
@@ -146,18 +151,19 @@ def main():
                                  if
                                  frame[
                                      "filename"] in available_images]
-    cells_image_data =[]
+
+    file_counter = 0
     for filename in os.listdir(folder_path):
         image = image_transformer.read_image(f"./Images/{filename}",
                                 "png", save=None)
         for json_image_labels in available_training_json:
             if json_image_labels["filename"] == filename:
                 cells = image_transformer.getCellsFromImage(image,json_image_labels["cells"])
-                cells_image_data.append(cells)
+                with open(f"./cells_image_data_{file_counter}.json", 'w') as f:
+                    json.dump(cells, f)
+                file_counter = file_counter + 1
     with open("./full_dataset_predictions_updated.json", 'w') as f:
         json.dump(available_training_json, f)
-    with open("./cells_image_data.json", 'w') as f:
-        json.dump(cells_image_data, f)
 
 
 
