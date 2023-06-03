@@ -159,7 +159,7 @@ def main():
         for json_image_labels in available_training_json:
             if json_image_labels["filename"] == filename:
                 cells = image_transformer.getCellsFromImage(image,json_image_labels["cells"])
-                with open(f"./cells_image_data_{file_counter}.json", 'w') as f:
+                with open(f"./cells_image_data/cells_image_data_{file_counter}.json", 'w') as f:
                     json.dump(cells, f)
                 file_counter = file_counter + 1
     with open("./full_dataset_predictions_updated.json", 'w') as f:
