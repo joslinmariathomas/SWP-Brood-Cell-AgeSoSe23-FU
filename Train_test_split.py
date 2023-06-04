@@ -37,7 +37,7 @@ class SplitTrainCells:
 def main():
     TrainTestSplit = SplitTrainCells()
 
-    folder_path = './cells_image_data'  # replace with your folder path
+    folder_path = './cells_image_data'
     available_cells = os.listdir(folder_path)
 
     for cell_image_data in available_cells:
