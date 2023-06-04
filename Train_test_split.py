@@ -18,6 +18,20 @@ class SplitTrainCells:
             return True
         else:
             return False
+    def get_train_test_cells(self,cell_image_data):
+        cells_image_data = import_from_json(
+            f"./cells_image_data/{cell_image_data}")
+        for cell_data in cells_image_data:
+            if self.addTrainOrTestIndex(
+                    cell_data.get("cell_indices")
+            ):
+                cell_data["Train_Test"] = "Train"
+                self.train_cells.append(cell_data["cell_id"])
+            else:
+                self.test_cells.append(cell_data["cell_id"])
+
+
+
 
 
 def main():
@@ -27,16 +41,8 @@ def main():
     available_cells = os.listdir(folder_path)
 
     for cell_image_data in available_cells:
-        cells_image_data = import_from_json(
-            f"./cells_image_data/{cell_image_data}")
-        for cell_data in cells_image_data:
-            if TrainTestSplit.addTrainOrTestIndex(
-                cell_data.get("cell_indices")
-            ):
-                cell_data["Train_Test"] = "Train"
-                TrainTestSplit.train_cells.append(cell_data["cell_id"])
-            else:
-                TrainTestSplit.test_cells.append(cell_data["cell_id"])
+        TrainTestSplit.get_train_test_cells(cell_image_data= cell_image_data)
+
     with open("./train_cells.json", 'w') as f:
         json.dump(TrainTestSplit.train_cells, f)
     with open("./test_cells.json", 'w') as f:
