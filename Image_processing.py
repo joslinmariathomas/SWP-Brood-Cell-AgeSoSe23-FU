@@ -91,7 +91,7 @@ class Imageprocessor:
                        "edge", )
         return torch.from_numpy(image)
 
-    def getCellsFromImage(self, image,json_image_cells,filename):
+    def getCellsFromImage(self, image,json_image_cells):
         indices = self.getCellIndices()
         cells = []
         for ((startX, endX), (startY, endY)), (x, y) in indices:
@@ -113,7 +113,6 @@ class Imageprocessor:
             cells.append(
                 {"cell_coordinates":cell_indices[2],
                  "cell_id":cell_id,
-                 "file_name": filename,
                  "cell_image":cell_indices[0].tolist(),
                  "cell_indices":cell_indices[1]}
             )
@@ -160,8 +159,9 @@ def main():
                                 "png", save=None)
         for json_image_labels in available_training_json:
             if json_image_labels["filename"] == filename:
-                cells = image_transformer.getCellsFromImage(image,json_image_labels["cells"], json_image_labels["filename"])
-                with open(f"./cells_image_data/cells_image_data_{file_counter}.json", 'w') as f:
+                filename_without_extension = os.path.splitext(filename)[0]
+                cells = image_transformer.getCellsFromImage(image,json_image_labels["cells"])
+                with open(f"./cells_image_data/{filename_without_extension}.json", 'w') as f:
                     json.dump(cells, f)
                 file_counter = file_counter + 1
     with open("./full_dataset_predictions_updated.json", 'w') as f:
