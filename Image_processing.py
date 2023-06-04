@@ -111,9 +111,10 @@ class Imageprocessor:
                     2, 0, 1), ((startX, endX), (startY, endY)), (x, y))
             cell_id = f"cell_id_{str(uuid.uuid4())}"
             cells.append(
-                {"cell_index":cell_indices[2],
+                {"cell_coordinates":cell_indices[2],
                  "cell_id":cell_id,
-                 "cell_image":cell_indices[0].tolist()}
+                 "cell_image":cell_indices[0].tolist(),
+                 "cell_indices":cell_indices[1]}
             )
             json_image_cells[y][x]["cell_id"] = cell_id
         return cells
