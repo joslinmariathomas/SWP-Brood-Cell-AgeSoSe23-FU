@@ -137,7 +137,7 @@ class Imageprocessor:
 
 
 def main():
-    jsonfile = import_from_json(filename="full_dataset_predictions.json")
+    jsonfile = import_from_json(filename="../full_dataset_predictions.json")
     image_transformer = Imageprocessor(
         augmentTest=False,
         augmentTrain=False,
@@ -164,7 +164,7 @@ def main():
                 with open(f"./cells_image_data/{filename_without_extension}.json", 'w') as f:
                     json.dump(cells, f)
                 file_counter = file_counter + 1
-    with open("./full_dataset_predictions_updated.json", 'w') as f:
+    with open("../full_dataset_predictions_updated.json", 'w') as f:
         json.dump(available_training_json, f)
 
 
