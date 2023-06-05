@@ -5,7 +5,7 @@ from helper_functions import import_from_json
 output_data = []
 # 16 cols x 18 rows
 new_egg_timestamps = np.full((18,16), -1.0)
-prev_states = np.full((18,16), '(empty)')
+prev_states = np.full((18,16), '(empty)', dtype='object')
 
 def iterate_frames(frames):
     num_frames = len(frames)
