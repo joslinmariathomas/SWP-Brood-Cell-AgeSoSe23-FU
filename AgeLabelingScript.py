@@ -13,6 +13,7 @@ def iterate_frames(frames):
     trans_empty_to_egg = 0
     num_wrong_trans_to_empty = 0
     num_wrong_trans_to_egg = 0
+    thresh_ahead = 100
     list_frame_ind = []
     for frame_ind in range(num_frames):
         frame_dict = frames[frame_ind]
@@ -22,8 +23,11 @@ def iterate_frames(frames):
 
         for row_ind, cell_row in enumerate(cells):
             for col_ind, cell in enumerate(cell_row):
+                prev_states[row_ind][col_ind]
+
                 wrong_trans = False
                 label = cell['pred_label']
+
                 new_label = label
                 # we don't need the label probabilities anymore
                 del cell['outputs']
@@ -31,7 +35,7 @@ def iterate_frames(frames):
                     age = 0
                     # transition from empty to egg: cell was previously labeled empty and now its label contains 'egg'
                     if 'egg' in label:
-                        for i in range(1,10):
+                        for i in range(1,thresh_ahead):
                             if frame_ind+i < num_frames and not 'egg' in frames[frame_ind + i]['cells'][row_ind][col_ind]['pred_label']:
                                 wrong_trans = True
                                 break
@@ -42,13 +46,15 @@ def iterate_frames(frames):
                                 trans_empty_to_egg += 1
                                 list_frame_ind.append((frame_ind, row_ind, col_ind))
                             new_egg_timestamps[row_ind][col_ind] = time
+                    else:
+                        wrong_trans = True
                 # previously not empty and now not empty
                 elif label != '(empty)':
                     # potentially change to days?
                     age = time - new_egg_timestamps[row_ind][col_ind]
                 # transition from not empty to empty
                 else:
-                    for i in range(1,10):
+                    for i in range(1,thresh_ahead):
                         if frame_ind+i < num_frames and frames[frame_ind + i]['cells'][row_ind][col_ind]['pred_label'] != '(empty)':
                             wrong_trans = True
                             break
@@ -60,10 +66,14 @@ def iterate_frames(frames):
 
                 if label != '(unknown)' and not wrong_trans:
                     prev_states[row_ind][col_ind] = label
-                else:
+                if label == '(unknown)' or wrong_trans:
                     new_label = prev_states[row_ind][col_ind]
 
+                if cell['pred_label'] == '()':
+                    cell['pred_label'] = '(unknown)'
                 cell['new_label'] = new_label
+                if cell['new_label'] == '()':
+                    cell['new_label'] = '(unknown)'
                 cell['age'] = age
 
         frame_dict['cells'] = cells

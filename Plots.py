@@ -10,17 +10,20 @@ def plot_cell(frames, row_ind, col_ind):
     new_labels = []
 
     label_colors = {
-              '(unknown)': 'red',
               '(empty)': "green",
               '(has egg)':"blue",
               '(has larva)':"orange",
               '(has young pupa)':"purple",
               '(has old pupa)':"magenta",
-              '(has bee head)':"cyan"}
+              '(has bee head)':"cyan",
+              '(unknown)':"red",
+              '(has egg, has larva)':"indigo",
+              '(has old pupa, has bee head)':"midnightblue"}
 
-    label_order = ['(empty)','(has egg)', '(has larva)', '(has young pupa)', '(has old pupa)','(has bee head)','(unknown)']
+    label_order = ['(empty)','(has egg)', '(has larva)', '(has young pupa)', '(has old pupa)','(has bee head)','(has egg, has larva)', '(has old pupa, has bee head)','(unknown)']
     for frame_ind in range(len(frames)):
         times.append(datetime.datetime.fromtimestamp(frames[frame_ind]['time']))
+        print(frames[frame_ind]['cells'][row_ind][col_ind]['new_label'])
         pred_labels.append(frames[frame_ind]['cells'][row_ind][col_ind]['pred_label'])
         new_labels.append(frames[frame_ind]['cells'][row_ind][col_ind]['new_label'])
 
@@ -29,15 +32,18 @@ def plot_cell(frames, row_ind, col_ind):
 
     # Plotting
     fig, ax = plt.subplots()
-    unique_labels = (set(new_labels))
+    #label_var = pred_labels
+    label_var = new_labels
+    unique_labels = (set(label_var))
 
     unique_colors = {label:label_colors[label] for label in unique_labels}
     ordered_unique_labels = sorted(unique_labels,
                                    key=lambda x: label_order.index(x))
 
     # Iterate over each data point
-    for timestamp, label in zip(numeric_timestamps, new_labels):
-        ax.scatter(timestamp, label,c=unique_colors[label],s=2,marker ='s' )
+    for timestamp, label in zip(numeric_timestamps, label_var):
+    #for timestamp, label in zip(numeric_timestamps, new_labels):
+        ax.scatter(timestamp, label, c=unique_colors[label], s=2, marker='s')
 
     ax.set_xlabel('Timestamps')
     ax.set_ylabel('Labels')
@@ -55,7 +61,7 @@ def plot_cell(frames, row_ind, col_ind):
     plt.show()
 def main():
     frames = import_from_json(filename="full_dataset_with_ages.json")
-    plot_cell(frames, 0, 12)
+    plot_cell(frames, 7, 4)
 
 if __name__ == "__main__":
     main()
