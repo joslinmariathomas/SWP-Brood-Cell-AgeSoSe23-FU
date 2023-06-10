@@ -1,5 +1,6 @@
 import json
 import numpy as np
+from collections import Counter
 from helper_functions import import_from_json
 # will be list of dictionaries that can be written to a json file
 output_data = []
@@ -7,13 +8,29 @@ output_data = []
 new_egg_timestamps = np.full((18,16), -1.0)
 prev_states = np.full((18,16), '(empty)', dtype='object')
 
+def get_label_counter(row_ind, col_ind, frame_ind, frames, thresh_back, thresh_ahead):
+    # check surrounding labels and make a list of labels (excluding unknown)
+    labels = []
+    for i in range(thresh_back, thresh_ahead+1):
+        if frame_ind+i < len(frames) \
+            and frames[frame_ind + i]['cells'][row_ind][col_ind]['pred_label'] != '(unknown)' \
+            and not ',' in frames[frame_ind + i]['cells'][row_ind][col_ind]['pred_label']:
+            labels.append(frames[frame_ind + i]['cells'][row_ind][col_ind]['pred_label'])
+    return Counter(labels)
+
 def iterate_frames(frames):
     num_frames = len(frames)
     print(len(frames))
     trans_empty_to_egg = 0
     num_wrong_trans_to_empty = 0
     num_wrong_trans_to_egg = 0
-    thresh_ahead = 100
+    #thresh_ahead = 100
+    # when we look more ahead at the labels to find out which state likely comes next
+    thresh_back_forward = -120
+    thresh_ahead_forward = 144
+    # when we look more backwards at the labels to find the most likely state we are currently in 
+    thresh_back_backward = -100
+    thresh_ahead_backward = 10
     list_frame_ind = []
     for frame_ind in range(num_frames):
         frame_dict = frames[frame_ind]
@@ -35,10 +52,18 @@ def iterate_frames(frames):
                     age = 0
                     # transition from empty to egg: cell was previously labeled empty and now its label contains 'egg'
                     if 'egg' in label:
+                        cnt = get_label_counter(row_ind, col_ind, frame_ind, frames, thresh_back_forward, thresh_ahead_forward)
+                        # if more than 70% are empty or less than 25% have egg
+                        if cnt['(empty)'] > np.round(cnt.total() * 0.7) \
+                            or cnt['(has egg)'] < np.round(cnt.total() * 0.25):
+                            wrong_trans = True
+
+                        """
                         for i in range(1,thresh_ahead):
                             if frame_ind+i < num_frames and not 'egg' in frames[frame_ind + i]['cells'][row_ind][col_ind]['pred_label']:
                                 wrong_trans = True
                                 break
+                        """
                         if wrong_trans:
                             num_wrong_trans_to_egg += 1
                         else:
@@ -54,10 +79,56 @@ def iterate_frames(frames):
                     age = time - new_egg_timestamps[row_ind][col_ind]
                 # transition from not empty to empty
                 else:
+                    cnt_backward = get_label_counter(row_ind, col_ind, frame_ind, frames, thresh_back_backward, thresh_ahead_backward)
+                    cnt = get_label_counter(row_ind, col_ind, frame_ind, frames, thresh_back_forward, thresh_ahead_forward)
+                    # get label with highest count to get most likely current state (if empty is highest then take next highest one)
+                    # maybe also work with time for stage thresholds?
+                    most_common_current = cnt_backward.most_common()
+                    i = 0
+                    while len(most_common_current) > i and most_common_current[i][0] == '(empty)':
+                        i+=1
+                    if len(most_common_current) > i:
+                        current_state = most_common_current[i][0]
+                        match current_state:
+                            case '(has egg)':
+                                min_empty = np.round(cnt.total() * 0.8)
+                                max_current = np.round(cnt.total() * 0.55)
+                            case '(has larva)':
+                                min_empty = np.round(cnt.total() * 0.85)
+                                max_current = np.round(cnt.total() * 0.35)
+                            case '(has young pupa)' | '(has old pupa)':
+                                min_empty = np.round(cnt.total() * 0.5)
+                                max_current = np.round(cnt.total() * 0.8)
+                            case '(has bee head)':
+                                min_empty = np.round(cnt.total() * 0.85)
+                                max_current = np.round(cnt.total() * 0.4)
+                            case _:
+                                wrong_trans = True
+                    else:
+                        wrong_trans = True
+
+                    actual_empty = cnt['(empty)']
+                    actual_current_state = cnt[current_state]
+                    if row_ind == 7 and col_ind == 4 and frame_ind == 553:
+                        print(cnt.most_common())
+                        print(f'current_state: {current_state}, \n \
+                            min_empty: {min_empty}, \n \
+                            max_current: {max_current}, \n \
+                            actual empty: {actual_empty}, \n \
+                            actual_current_state: {actual_current_state}')
+                    # if less than min_empty cells are labeled 'empty' or more than max_current ...
+                    #   ... are labeled the same as the current state the transition is likely wrong
+                    if not wrong_trans \
+                        and (actual_empty < min_empty \
+                        or actual_current_state > max_current):
+                        wrong_trans = True
+                    # adjust how many 'empty' labels are necessary to transition to empty based on current state
+                    """
                     for i in range(1,thresh_ahead):
                         if frame_ind+i < num_frames and frames[frame_ind + i]['cells'][row_ind][col_ind]['pred_label'] != '(empty)':
                             wrong_trans = True
                             break
+                    """
                     if wrong_trans:
                         num_wrong_trans_to_empty += 1
                         age = time - new_egg_timestamps[row_ind][col_ind]
