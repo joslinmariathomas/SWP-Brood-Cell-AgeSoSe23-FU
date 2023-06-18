@@ -61,6 +61,7 @@ def plot_cell(frames, row_ind, col_ind):
     """
 
     dict_all_labels = dict(zip(numeric_timestamps, label_var))
+
     # Sort labels in label_order (not by timestamp) 
     sorted_dict = dict(sorted(dict_all_labels.items(), key=lambda item: label_order.index(item[1])))
     # scatterplot always constructs in order of occurance of the underlying data (from bottom to top)
@@ -83,28 +84,59 @@ def plot_cell(frames, row_ind, col_ind):
         ax2.plot(numeric_timestamps, ages, 'k', zorder=2)
         ax2.set_ylabel('Age in days')
 
+    # boxes over missing time periods
+    plt.axvspan(19222.23611111111, 19226.711203703704, color='grey', alpha=0.5)
+    plt.axvspan(19237.36111111111, 19243.708333333332, color='grey', alpha=0.5)
+
     # Show the plot
     plt.show()
 
 def main():
     frames = import_from_json(filename="full_dataset_with_ages.json")
+    # --------------------------- full cycle ---------------------------------------------------------
     #plot_cell(frames, 7, 4)
     #plot_cell(frames, 8, 4)
-    #plot_cell(frames, 10, 9)
+    #plot_cell(frames, 6, 7)
+    #plot_cell(frames, 8, 7)
+    #plot_cell(frames, 13, 8)
+
+    # cell gets way too old, but cycle looks fine
+    #plot_cell(frames, 13, 4)
+    #plot_cell(frames, 14, 4)
+
+    # ------------------- doesn't make it to adulthood -----------------------------------------------
+    #plot_cell(frames, 7, 7)
+    #plot_cell(frames, 12, 2)
+    #plot_cell(frames, 17, 15)
+
+    # two egg phases
     #plot_cell(frames, 0, 12)
     #plot_cell(frames, 11, 14)
-    #plot_cell(frames, 1, 1)
+
+    # cell gets empty for a very short time between eggs, which is not captured, but not that big of a problem
+    #plot_cell(frames, 10, 9)
     #plot_cell(frames, 15, 12)
     #plot_cell(frames, 9, 7)
-    #plot_cell(frames, 6, 7)
-    plot_cell(frames, 8, 7)
+    #plot_cell(frames, 3, 12)
+    #plot_cell(frames, 1, 1)
+    #plot_cell(frames, 8, 9)
 
-    # in these ones it's hard to decide what happens even if manually looking at it
+    # begins with egg but looks good
+    #plot_cell(frames, 16, 14)
+    #plot_cell(frames, 14, 7)
+    #plot_cell(frames, 14, 8)
+    #plot_cell(frames, 14, 9)
+
+    # ----------------------- age 0 all the time ------------------------------------------------------
     #plot_cell(frames, 5, 7)
-    #plot_cell(frames, 7, 7)
-    
 
+    # ---------------------- labels totally wrong --------------------------------------------
+    # egg label all the time
+    #plot_cell(frames, 0, 2)
+    # larva or unknown all the time
+    #plot_cell(frames, 9, 15)
 
+    plot_cell(frames, 4, 3)
 
 if __name__ == "__main__":
     main()
