@@ -1,23 +1,16 @@
 # IDEAS: 
 """
-- use how long stage should last to determine how far to look
-- bee head is actually a very short stage so bee head labels are quite likely actually empty!!!
-    - determine new bee head threshold values with cell 8, 4
-
 later potential improvement
 - go over egg labels again if they reach over a certain threshold and try to find empty phase
     if most likely empty phase is found then adjust ages of eggs
 """
 
 
-
-
 import json
 import numpy as np
 from collections import Counter
 from helper_functions import import_from_json
-# will be list of dictionaries that can be written to a json file
-output_data = []
+
 # 16 cols x 18 rows
 new_egg_timestamps = np.full((18,16), -1.0)
 prev_states = np.full((18,16), '(empty)', dtype='object')
