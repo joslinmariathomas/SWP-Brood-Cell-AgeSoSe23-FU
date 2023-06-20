@@ -1,8 +1,9 @@
 # IDEAS: 
 """
 later potential improvement
-- go over egg labels again if they reach over a certain threshold and try to find empty phase
-    if most likely empty phase is found then adjust ages of eggs
+- go over cells again, find the ones that get too old overall or where the egg stage lasts too long and try to correct them:
+    - if egg phase too long then check for short empty phase somewhere in the egg phase
+    - if cell is too old overall check if there are empty label at the end of the lifecycle that still get labeled with an age != 0 and correct them 
 """
 
 
