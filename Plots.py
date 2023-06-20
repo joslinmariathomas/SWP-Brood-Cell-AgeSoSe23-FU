@@ -33,7 +33,7 @@ def plot_cell(frames, row_ind, col_ind):
         print(f'frame_ind: {frame_ind}, label: ' + frames[frame_ind]['cells'][row_ind][col_ind]['pred_label'] + ', age: ' + str(frames[frame_ind]['cells'][row_ind][col_ind]['age']))
         pred_labels.append(frames[frame_ind]['cells'][row_ind][col_ind]['pred_label'])
         new_labels.append(frames[frame_ind]['cells'][row_ind][col_ind]['new_label'])
-        ages.append(round(frames[frame_ind]['cells'][row_ind][col_ind]['age'] / 60 / 60 / 24, 2))
+        ages.append(round(frames[frame_ind]['cells'][row_ind][col_ind]['age'], 2))
 
     # Convert datetime timestamps to numeric values
     numeric_timestamps = mdates.date2num(times)
@@ -114,7 +114,7 @@ def main():
     #plot_cell(frames, 11, 14)
 
     # cell gets empty for a very short time between eggs, which is not captured, but not that big of a problem
-    #plot_cell(frames, 10, 9)
+    plot_cell(frames, 10, 9)
     #plot_cell(frames, 15, 12)
     #plot_cell(frames, 9, 7)
     #plot_cell(frames, 3, 12)
@@ -136,7 +136,7 @@ def main():
     # larva or unknown all the time
     #plot_cell(frames, 9, 15)
 
-    plot_cell(frames, 4, 3)
+    #plot_cell(frames, 8, 12)
 
 if __name__ == "__main__":
     main()

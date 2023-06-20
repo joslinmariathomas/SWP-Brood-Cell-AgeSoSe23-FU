@@ -218,7 +218,8 @@ def iterate_frames(frames):
                 cell['new_label'] = new_label
                 if cell['new_label'] == '()':
                     cell['new_label'] = '(unknown)'
-                cell['age'] = age
+                # convert to days
+                cell['age'] = age / 86400
                 """
                 if age > 2073600 and not (row_ind, col_ind) in cells_over_24_days:
                     cells_over_24_days.append((row_ind, col_ind))
@@ -230,7 +231,7 @@ def iterate_frames(frames):
 
     # correct cell (0, 2) from full 'has egg' to full 'empty'
     for frame_ind in range(2067):
-        frames[frame_ind]['cells'][0][2]['age'] = 0
+        frames[frame_ind]['cells'][0][2]['age'] = 0.0
         frames[frame_ind]['cells'][0][2]['new_label'] = '(empty)'
 
 
