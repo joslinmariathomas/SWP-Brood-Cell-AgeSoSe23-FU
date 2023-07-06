@@ -73,6 +73,10 @@ validation_data = tensor_data[num_training:]
 training_targets = target_tensor[:num_training]
 validation_targets = target_tensor[num_training:]
 
+training_data = training_data.to(device)
+validation_data = validation_data.to(device)
+training_targets = training_targets.to(device)
+validation_targets = validation_targets.to(device)
 
 # Perform training iterations
 num_epochs = 100
