@@ -1,5 +1,4 @@
 import torch
-import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 from helper_functions import import_from_json
