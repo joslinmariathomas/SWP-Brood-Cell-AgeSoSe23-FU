@@ -78,6 +78,16 @@ validation_data = validation_data.to(device)
 training_targets = training_targets.to(device)
 validation_targets = validation_targets.to(device)
 
+# Compute mean and standard deviation of the training data
+data_mean = torch.mean(training_data, dim=0)
+data_std = torch.std(training_data, dim=0)
+
+# Normalize the training data
+training_data = (training_data - data_mean) / data_std
+
+# Normalize the validation data using the mean and standard deviation of the training data
+validation_data = (validation_data - data_mean) / data_std
+
 # Perform training iterations
 num_epochs = 100
 batch_size = 32  # Choose an appropriate batch size
