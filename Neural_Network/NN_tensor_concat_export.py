@@ -1,11 +1,7 @@
 import torch
 import os
 from helper_functions import (import_from_json,export_to_json)
-folder_path = '../training_tensor_data/tensors/'
-labels_id_folder = '../training_tensor_data/labels/'
-age_data_folder = '../'
-model_list = []
-full_age_data = import_from_json('../full_dataset_with_ages_with_ids.json')
+full_age_data = import_from_json('/content/SWP-Brood-Cell-AgeSoSe23-FU/full_dataset_with_ages_with_ids.json')
 def get_cell_ids(file_name,cell_id_list,cell_age_list,train_or_test,labels_id_folder):
     label_file_name = os.path.splitext(file_name)[0]
     cell_ids = import_from_json(f'{labels_id_folder}/{label_file_name}.json')
@@ -41,6 +37,7 @@ def save_tensor_and_ages(train_or_test:str, tensor_folder_path,
                          labels_folder,folder_to_save):
     cell_id_list = []
     cell_age_list = []
+    model_list = []
     for file_name in os.listdir(tensor_folder_path):
         cell_id_list, cell_age_list = get_cell_ids(file_name, cell_id_list,
                                                    cell_age_list,
@@ -55,23 +52,23 @@ def save_tensor_and_ages(train_or_test:str, tensor_folder_path,
     export_to_json(filename=f"age_for_tensors_{train_or_test}", folder=folder_to_save,
                    file=cell_age_list)
     torch.save(stacked_model,
-               f'{folder_to_save}_{train_or_test}_tensor.pt')
+               f'{folder_to_save}/{train_or_test}_tensor.pt')
 
 
 def main():
-    training_data_folder = '../training_tensor_data/tensors/'
-    training_labels_folder = '../training_tensor_data/labels/'
+    training_data_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/training_tensor_data/tensors/'
+    training_labels_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/training_tensor_data/labels/'
     folder_to_save = './'
     save_tensor_and_ages(train_or_test="train",
                          tensor_folder_path=training_data_folder,
                          labels_folder=training_labels_folder,
                          folder_to_save = folder_to_save)
-    training_data_folder = '../testing_tensor_data/tensors/'
-    training_labels_folder = '../testing_tensor_data/labels/'
-    folder_to_save = './'
+    testing_data_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors/'
+    testing_labels_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/labels/'
+    folder_to_save = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network'
     save_tensor_and_ages(train_or_test="test",
-                         tensor_folder_path=training_data_folder,
-                         labels_folder=training_labels_folder,
+                         tensor_folder_path=testing_data_folder,
+                         labels_folder=testing_labels_folder,
                          folder_to_save=folder_to_save)
 
 
