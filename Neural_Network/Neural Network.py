@@ -48,10 +48,10 @@ criterion = nn.MSELoss()
 optimizer = optim.SGD(model.parameters(), lr=0.001)
 
 # Load the actual outputs saved in a list
-actual_outputs = import_from_json('./age_for_tensors_train.json')  # Replace with your actual output values
+actual_outputs = import_from_json('/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/age_for_tensors_train.json')  # Replace with your actual output values
 
 # Load the .pt tensor file
-tensor_data = torch.load('./train_tensor.pt')
+tensor_data = torch.load('/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/train_tensor.pt')
 
 # Convert tensor_data into a list of tensors
 tensor_list = list(tensor_data)
