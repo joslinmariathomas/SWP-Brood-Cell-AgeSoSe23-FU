@@ -149,7 +149,8 @@ for epoch in range(num_epochs):
 
         avg_val_loss = val_loss / num_validation_batches
         val_losses.append(avg_val_loss)
-
+    print(
+        f"Epoch [{epoch + 1}/{num_epochs}], Training Loss: {avg_train_loss:.4f}, Validation Loss: {avg_val_loss:.4f}")
 
 
 testing_tensor = torch.load('/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors/scan_back_220810-044352-utc_test.pt')
