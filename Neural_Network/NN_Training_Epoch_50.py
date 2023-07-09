@@ -5,8 +5,6 @@ from helper_functions import (import_from_json,export_to_json)
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Define the model architecture
-import torch
 import torch.nn as nn
 
 class CellModel(nn.Module):
@@ -154,6 +152,9 @@ for epoch in range(num_epochs):
 
 
 testing_tensor = torch.load('/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors/scan_back_220810-044352-utc_test.pt')
+true_ages = torch.load('/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions/True_test_labels/scan_back_220810-044352-utc_test.json')
+true_ages_tensor = torch.tensor(true_ages).unsqueeze(1).to(device)
+
 # Normalize the test data using the mean and standard deviation of the training data
 test_data = testing_tensor.to(device)
 test_data = (test_data - data_mean) / data_std
@@ -169,6 +170,9 @@ with torch.no_grad():
     # Pass the test data through the model
     predictions = model(test_data)
 
+    loss_criterion = criterion(predictions, true_ages_tensor)
+    loss = loss_criterion.item()
+    print (loss)
 predictions = predictions.cpu()
 
 predictions_numpy = predictions.numpy()

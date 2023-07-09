@@ -47,6 +47,8 @@ def save_tensor_and_ages(train_or_test: str, tensor_folder_path,
     model_list = []
     filename_list = []
     for file_name in os.listdir(tensor_folder_path):
+        if train_or_test == "test":
+            cell_age_list = []
         cell_id_list, cell_age_list, filename_list = get_cell_ids(
             file_name=file_name, cell_id_list=cell_id_list,
             cell_age_list=cell_age_list,
@@ -57,11 +59,18 @@ def save_tensor_and_ages(train_or_test: str, tensor_folder_path,
             file_path = os.path.join(tensor_folder_path, file_name)
             model = torch.load(file_path)
             model_list.append(model)
+        if train_or_test == "test":
+            label_file_name = os.path.splitext(file_name)[0]
+            pred_label_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions/True_test_labels'
+            export_to_json(filename=f"{label_file_name}",
+                           folder=pred_label_folder,
+                           file=cell_age_list)
 
     stacked_model = torch.cat(model_list, dim=0)
-    export_to_json(filename=f"age_for_tensors_{train_or_test}",
-                   folder=folder_to_save,
-                   file=cell_age_list)
+    if train_or_test == "train":
+        export_to_json(filename=f"age_for_tensors_{train_or_test}",
+                       folder=folder_to_save,
+                       file=cell_age_list)
     export_to_json(filename=f"cell_ids_{train_or_test}",
                    folder=folder_to_save,
                    file=cell_id_list)
@@ -70,6 +79,7 @@ def save_tensor_and_ages(train_or_test: str, tensor_folder_path,
                    file=filename_list)
     torch.save(stacked_model,
                f'{folder_to_save}/{train_or_test}_tensor.pt')
+
 
 def main():
     training_data_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/training_tensor_data/tensors/'

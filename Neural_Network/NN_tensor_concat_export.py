@@ -62,7 +62,7 @@ def save_tensor_and_ages(train_or_test: str, tensor_folder_path,
             model_list.append(model)
         if train_or_test =="test":
             label_file_name = os.path.splitext(file_name)[0]
-            pred_label_folder = '../Predictions/Predicted_labels/'
+            pred_label_folder = '../Predictions/True_test_labels'
             export_to_json(filename=f"{label_file_name}",
                            folder=pred_label_folder,
                            file=cell_age_list)
