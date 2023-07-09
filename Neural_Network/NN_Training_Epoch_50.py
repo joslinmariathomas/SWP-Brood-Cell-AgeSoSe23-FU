@@ -152,7 +152,7 @@ for epoch in range(num_epochs):
 
 
 testing_tensor = torch.load('/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors/scan_back_220810-044352-utc_test.pt')
-true_ages = torch.load('/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions/True_test_labels/scan_back_220810-044352-utc_test.json')
+true_ages = import_from_json('/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions/True_test_labels/scan_back_220810-044352-utc_test.json')
 true_ages_tensor = torch.tensor(true_ages).unsqueeze(1).to(device)
 
 # Normalize the test data using the mean and standard deviation of the training data
