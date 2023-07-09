@@ -155,10 +155,11 @@ for epoch in range(num_epochs):
 
 testing_tensor = torch.load('/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors/scan_back_220810-044352-utc_test.pt')
 # Normalize the test data using the mean and standard deviation of the training data
-test_data = (testing_tensor - data_mean) / data_std
+test_data = testing_tensor.to(device)
+test_data = (test_data - data_mean) / data_std
 
 # Move the test data to the GPU (if applicable)
-test_data = test_data.to(device)
+
 
 # Set the model to evaluation mode
 model.eval()
