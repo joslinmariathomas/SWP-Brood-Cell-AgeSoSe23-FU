@@ -45,4 +45,6 @@ if __name__ == "__main__":
         f'{test_tensor_folder_path}/{file_name}')
         age_file_name = os.path.splitext(file_name)[0]
         true_ages = import_from_json(f'{test_true_ages_folder}/{age_file_name}.json')
+        print(age_file_name)
         testing(testing_tensor,true_ages)
+
