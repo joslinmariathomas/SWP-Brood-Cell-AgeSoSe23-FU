@@ -1,7 +1,7 @@
 import torch
 import torch.optim as optim
 import matplotlib.pyplot as plt
-from helper_functions import import_from_json
+from helper_functions import (import_from_json,export_to_json)
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -171,3 +171,10 @@ with torch.no_grad():
 
 predictions = predictions.cpu()
 
+predictions_numpy = predictions.numpy()
+
+predictions_list = predictions_numpy.tolist()
+predictions_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions'
+export_to_json(filename=f"predictions_test",
+               folder=predictions_folder,
+               file=predictions_list)
