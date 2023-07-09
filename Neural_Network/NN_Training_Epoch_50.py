@@ -175,6 +175,6 @@ predictions_numpy = predictions.numpy()
 
 predictions_list = predictions_numpy.tolist()
 predictions_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions'
-export_to_json(filename=f"predictions_test",
+export_to_json(filename=f"predictions_test1",
                folder=predictions_folder,
                file=predictions_list)
