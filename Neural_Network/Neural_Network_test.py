@@ -1,4 +1,5 @@
 import torch
+import os
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
@@ -37,8 +38,11 @@ def testing(testing_tensor:torch.tensor,true_ages):
 
 
 if __name__ == "__main__":
-    testing_tensor = torch.load(
-        '/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors/scan_back_220810-044352-utc_test.pt')
-    true_ages = import_from_json(
-        '/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions/True_test_labels/scan_back_220810-044352-utc_test.json')
-    testing(testing_tensor,true_ages)
+    test_tensor_folder_path = '/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors'
+    test_true_ages_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions/True_test_labels'
+    for file_name in os.listdir(test_tensor_folder_path):
+        testing_tensor = torch.load(
+        f'{test_tensor_folder_path}/{file_name}')
+        age_file_name = os.path.splitext(file_name)[0]
+        true_ages = import_from_json(f'{test_true_ages_folder}/{age_file_name}.json')
+        testing(testing_tensor,true_ages)
