@@ -1,10 +1,14 @@
 import torch
+import random
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 from helper_functions import (import_from_json,export_to_json)
 from Neural_Network_model import CellModel
 # Check for GPU availability
+random.seed(123)
+torch.manual_seed(123)
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 training_params_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Model_Parameters/'
 
@@ -59,7 +63,7 @@ training_data = (training_data - data_mean) / data_std
 validation_data = (validation_data - data_mean) / data_std
 
 # Perform training iterations
-num_epochs = 25
+num_epochs = 50
 batch_size = 32  # Choose an appropriate batch size
 num_training_batches = (num_training - 1) // batch_size + 1
 num_validation_batches = (num_validation - 1) // batch_size + 1
