@@ -82,8 +82,8 @@ def save_tensor_and_ages(train_or_test: str, tensor_folder_path,
 
 
 def main():
-    training_data_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/training_tensor_data/tensors/'
-    training_labels_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/training_tensor_data/labels/'
+    training_data_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Gaussian_Blur/training_tensor_data/tensors/'
+    training_labels_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Gaussian_Blur/training_tensor_data/labels/'
     folder_to_save = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network'
     save_tensor_and_ages(train_or_test="train",
                          tensor_folder_path=training_data_folder,
