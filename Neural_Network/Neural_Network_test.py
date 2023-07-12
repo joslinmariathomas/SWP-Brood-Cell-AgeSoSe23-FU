@@ -31,20 +31,23 @@ def testing(testing_tensor:torch.tensor,true_ages):
 
         loss_criterion = criterion(predictions, true_ages_tensor)
         loss = loss_criterion.item()
-        print(loss)
+        # print(loss)
+        print(predictions)
+        return predictions
 
 
 
 
 
 if __name__ == "__main__":
-    test_tensor_folder_path = '/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors'
-    test_true_ages_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions/True_test_labels'
+    test_tensor_folder_path = '../testing_tensor_data/tensors'
+    test_true_ages_folder = '../Predictions/True_test_labels'
     for file_name in os.listdir(test_tensor_folder_path):
         testing_tensor = torch.load(
         f'{test_tensor_folder_path}/{file_name}')
+        tensor_to_numpy = testing_tensor.numpy()
+        tensor_image = tensor_to_numpy.transpose(0, 2, 3, 1)
         age_file_name = os.path.splitext(file_name)[0]
         true_ages = import_from_json(f'{test_true_ages_folder}/{age_file_name}.json')
-        print(age_file_name)
-        testing(testing_tensor,true_ages)
+        predictions = testing(testing_tensor,true_ages)
 

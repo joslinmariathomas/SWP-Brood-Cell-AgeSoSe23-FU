@@ -88,10 +88,10 @@ def main():
     training_data_folder = '../training_tensor_data/tensors/'
     training_labels_folder = '../training_tensor_data/labels/'
     folder_to_save = './'
-    # save_tensor_and_ages(train_or_test="train",
-    #                      tensor_folder_path=training_data_folder,
-    #                      labels_folder=training_labels_folder,
-    #                      folder_to_save=folder_to_save)
+    save_tensor_and_ages(train_or_test="train",
+                         tensor_folder_path=training_data_folder,
+                         labels_folder=training_labels_folder,
+                         folder_to_save=folder_to_save)
     testing_data_folder = '../testing_tensor_data/tensors/'
     testing_labels_folder = '../testing_tensor_data/labels/'
     folder_to_save = './'
