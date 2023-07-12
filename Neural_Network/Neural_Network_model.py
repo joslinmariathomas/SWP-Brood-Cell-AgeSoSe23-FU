@@ -3,9 +3,8 @@ import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Define the model architecture
-import torch
-import torch.nn as nn
 
+import torch.nn as nn
 class CellModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -33,5 +32,3 @@ class CellModel(nn.Module):
         x = self.layers(x)
         x = torch.flatten(x, start_dim=1)  # flatten all dimensions except batch
         return x
-
-

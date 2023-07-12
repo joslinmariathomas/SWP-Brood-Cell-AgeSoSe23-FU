@@ -1,17 +1,12 @@
 import torch
-import random
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
-from helper_functions import import_from_json
+from helper_functions import (import_from_json,export_to_json)
 from Neural_Network_model import CellModel
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-random.seed(123)
-torch.manual_seed(123)
-
-# Load the model and move it to the GPU device
 model = CellModel().to(device)
 
 # Define loss function and optimizer
@@ -122,8 +117,6 @@ for epoch in range(num_epochs):
 
         avg_val_loss = val_loss / num_validation_batches
         val_losses.append(avg_val_loss)
-
-    # Print the average training and validation losses for the epoch
     print(
         f"Epoch [{epoch + 1}/{num_epochs}], Training Loss: {avg_train_loss:.4f}, Validation Loss: {avg_val_loss:.4f}")
 
