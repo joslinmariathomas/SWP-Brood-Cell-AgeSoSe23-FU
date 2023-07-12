@@ -26,10 +26,12 @@ class CellModel(nn.Module):
             nn.ReLU(),
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=0),
             nn.ReLU(),
+            nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=0),  # Output layer with 1 channel
         )
 
     def forward(self, x):
         x = self.layers(x)
-        print(x.shape)
+        x = torch.flatten(x, start_dim=1)  # flatten all dimensions except batch
         return x
+
 
