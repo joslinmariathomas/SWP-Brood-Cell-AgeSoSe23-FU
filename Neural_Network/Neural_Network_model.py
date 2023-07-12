@@ -27,7 +27,7 @@ class CellModel(nn.Module):
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=0),
             nn.ReLU(),
         )
-        self.fc = nn.Linear(64, 1)
+        self.fc = nn.Linear(32*8*8, 1)
     def forward(self, x):
         x = self.layers(x)
         x = torch.flatten(x, start_dim=1)
