@@ -31,9 +31,8 @@ def testing(testing_tensor:torch.tensor,true_ages):
 
         loss_criterion = criterion(predictions, true_ages_tensor)
         loss = loss_criterion.item()
-        # print(loss)
-        print(predictions)
-        return predictions
+
+        return predictions,loss
 
 
 
@@ -42,6 +41,7 @@ def testing(testing_tensor:torch.tensor,true_ages):
 if __name__ == "__main__":
     test_tensor_folder_path = '/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors'
     test_true_ages_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions/True_test_labels'
+    predictions_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions/Predicted_labels'
     for file_name in os.listdir(test_tensor_folder_path):
         testing_tensor = torch.load(
         f'{test_tensor_folder_path}/{file_name}')
@@ -49,5 +49,10 @@ if __name__ == "__main__":
         tensor_image = tensor_to_numpy.transpose(0, 2, 3, 1)
         age_file_name = os.path.splitext(file_name)[0]
         true_ages = import_from_json(f'{test_true_ages_folder}/{age_file_name}.json')
-        predictions = testing(testing_tensor,true_ages)
+        predictions,loss = testing(testing_tensor,true_ages)
+        print(f"Loss in file {age_file_name}: {loss}")
+        predictions_list = predictions.tolist()
+        export_to_json(folder = predictions_folder,
+                       filename = age_file_name,
+                       file=predictions_list)
 
