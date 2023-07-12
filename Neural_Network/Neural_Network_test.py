@@ -40,8 +40,8 @@ def testing(testing_tensor:torch.tensor,true_ages):
 
 
 if __name__ == "__main__":
-    test_tensor_folder_path = '../testing_tensor_data/tensors'
-    test_true_ages_folder = '../Predictions/True_test_labels'
+    test_tensor_folder_path = '/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors'
+    test_true_ages_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Predictions/True_test_labels'
     for file_name in os.listdir(test_tensor_folder_path):
         testing_tensor = torch.load(
         f'{test_tensor_folder_path}/{file_name}')
