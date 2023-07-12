@@ -63,7 +63,7 @@ validation_data = (validation_data - data_mean) / data_std
 
 # Perform training iterations
 num_epochs = 100
-batch_size = 50  # Choose an appropriate batch size
+batch_size = 32  # Choose an appropriate batch size
 num_training_batches = (num_training - 1) // batch_size + 1
 num_validation_batches = (num_validation - 1) // batch_size + 1
 
