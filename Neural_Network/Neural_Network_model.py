@@ -33,7 +33,7 @@ class CellModel(nn.Module):
 
     def forward(self, x):
         x = self.layers(x)
-        print(x.shape)
+        print("Model2")
         x = torch.flatten(x, start_dim=1)
         return x
 
