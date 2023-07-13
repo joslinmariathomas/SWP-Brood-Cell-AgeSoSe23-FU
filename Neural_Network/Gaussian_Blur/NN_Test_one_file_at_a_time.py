@@ -12,16 +12,16 @@ from Neural_Network.Gaussian_Blur.Modified_Model.Neural_Network_model import Cel
 
 
 if __name__ == "__main__":
-    test_tensor_folder_path = '../testing_tensor_data/tensors'
-    test_true_ages_folder = '../Predictions/True_test_labels'
+    test_tensor_folder_path = './testing_tensor_data/tensors'
+    test_true_ages_folder = './Predictions/True_test_labels'
     files = (os.listdir(test_tensor_folder_path))
     i = random.randint(0, 115)
     file_name = files[i]
     file_no_ext = os.path.splitext(file_name)[0]
 
-    predictions =  import_from_json(f"../Predictions/Predicted_labels/{file_no_ext}.json")
+    predictions =  import_from_json(f"./Predictions/Predicted_labels/{file_no_ext}.json")
     predictions = [round(pred[0],2) for pred in predictions]
-    annotations = import_from_json(f"../Predictions/True_test_labels/{file_no_ext}.json")
+    annotations = import_from_json(f"./Predictions/True_test_labels/{file_no_ext}.json")
     annotations = [round(age,2) for age in annotations]
 
     testing_tensor = torch.load(
