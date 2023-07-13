@@ -7,7 +7,7 @@ from helper_functions import (import_from_json,export_to_json)
 from Neural_Network_model import CellModel
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-training_params_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Gaussian_Blur/Modified_Model/Model Parameters/'
+training_params_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Gaussian_Blur/Modified_Model/Model_Parameters/'
 
 def testing(testing_tensor:torch.tensor,true_ages):
     model = CellModel().to(device)
