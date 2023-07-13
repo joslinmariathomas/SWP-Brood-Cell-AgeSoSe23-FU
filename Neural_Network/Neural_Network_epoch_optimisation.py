@@ -1,4 +1,5 @@
 import torch
+import random
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
@@ -6,7 +7,8 @@ from helper_functions import (import_from_json,export_to_json)
 from Neural_Network_model import CellModel
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+random.seed(1)
+torch.manual_seed(1)
 model = CellModel().to(device)
 
 # Define loss function and optimizer
