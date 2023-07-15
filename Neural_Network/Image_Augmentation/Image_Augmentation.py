@@ -8,7 +8,6 @@ def augment_image(image_tensor):
     # Randomly select an augmentation technique
     augmentation = random.choice([
         transforms.RandomRotation(10),
-        transforms.RandomResizedCrop((224, 224)),
         transforms.RandomHorizontalFlip(),
         transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
         transforms.RandomGrayscale(p=0.2),
