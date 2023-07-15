@@ -91,6 +91,7 @@ for epoch in range(num_epochs):
             augmented_tensor = augment_image(image_tensor)
             batch_input_list.append(augmented_tensor)
         batch_input = torch.stack(batch_input_list,dim=0)
+        batch_input = batch_input.to(device)
         # Zero the parameter gradients
         optimizer.zero_grad()
 
