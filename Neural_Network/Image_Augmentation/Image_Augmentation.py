@@ -17,7 +17,8 @@ def augment_image(image_tensor):
 
     # Apply the selected augmentation technique to the image
     augmented_image = augmentation(image)
+    resized_image = augmented_image.resize((64, 64))
 
-    # Convert the augmented PIL Image back to tensor
-    augmented_tensor = transforms.ToTensor()(augmented_image)
-    return augmented_tensor
+    # Convert the resized PIL Image back to tensor
+    resized_tensor = transforms.ToTensor()(resized_image)
+    return resized_tensor
