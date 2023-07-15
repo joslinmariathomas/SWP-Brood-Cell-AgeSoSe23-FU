@@ -9,8 +9,7 @@ from Image_Augmentation import augment_image
 from torchvision import transforms
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-random.seed(1)
-torch.manual_seed(1)
+
 model = CellModel().to(device)
 
 # Define loss function and optimizer
@@ -18,10 +17,10 @@ criterion = nn.MSELoss()
 optimizer = optim.SGD(model.parameters(), lr=0.001)
 
 # Load the actual outputs saved in a list
-actual_outputs = import_from_json('/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Image_Augmentation/age_for_tensors_train.json')  # Replace with your actual output values
+actual_outputs = import_from_json('/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/age_for_tensors_train.json')  # Replace with your actual output values
 
 # Load the .pt tensor file
-tensor_data = torch.load('/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Image_Augmentation/train_tensor.pt')
+tensor_data = torch.load('/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/train_tensor.pt')
 
 # Convert tensor_data into a list of tensors
 tensor_list = list(tensor_data)
@@ -85,14 +84,14 @@ for epoch in range(num_epochs):
         end_idx = start_idx + batch_size
 
         batch_target = shuffled_targets[start_idx:end_idx]
+        batch_input = shuffled_data[start_idx:end_idx]
         batch_input_list = []
+        for image in batch_input:
+            augmented_tensor = augment_image(image)
+            resized_image = transforms.Resize((64, 64))(augmented_tensor)
+            batch_input_list.append(resized_image)
+        batch_input = torch.stack(batch_input_list, dim=0)
 
-        for i in range(start_idx, end_idx):
-            image_tensor = shuffled_data[i]
-            augmented_tensor = augment_image(image_tensor)
-            resized_tensor = transforms.Resize((64, 64))(augmented_tensor)
-            batch_input_list.append(augmented_tensor)
-        batch_input = torch.stack(batch_input_list,dim=0)
         batch_input = batch_input.to(device)
         # Zero the parameter gradients
         optimizer.zero_grad()
@@ -141,4 +140,5 @@ plt.ylabel('Loss')
 plt.title('Training and Validation Loss')
 plt.legend()
 plt.show()
+
 
