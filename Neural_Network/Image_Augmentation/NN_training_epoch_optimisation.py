@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from helper_functions import (import_from_json,export_to_json)
 from Neural_Network_model import CellModel
 from Image_Augmentation import augment_image
+from torchvision import transforms
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 random.seed(1)
@@ -89,6 +90,7 @@ for epoch in range(num_epochs):
         for i in range(start_idx, end_idx):
             image_tensor = shuffled_data[i]
             augmented_tensor = augment_image(image_tensor)
+            resized_tensor = transforms.Resize((64, 64))(augmented_tensor)
             batch_input_list.append(augmented_tensor)
         batch_input = torch.stack(batch_input_list,dim=0)
         batch_input = batch_input.to(device)
