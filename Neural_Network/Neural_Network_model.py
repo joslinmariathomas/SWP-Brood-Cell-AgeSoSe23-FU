@@ -29,7 +29,7 @@ class CellModel(nn.Module):
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=0),
             nn.ReLU(),
             nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=0),
-            nn.ReLU()  # Replace ReLU with Softplus for non-negative output
+             # Replace ReLU with Softplus for non-negative output
         )
 
     def forward(self, x):
