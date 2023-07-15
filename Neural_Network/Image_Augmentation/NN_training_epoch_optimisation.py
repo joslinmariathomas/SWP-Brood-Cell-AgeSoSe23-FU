@@ -88,8 +88,7 @@ for epoch in range(num_epochs):
         batch_input_list = []
         for image in batch_input:
             augmented_tensor = augment_image(image)
-            resized_image = transforms.Resize((64, 64))(augmented_tensor)
-            batch_input_list.append(resized_image)
+            batch_input_list.append(augmented_tensor)
         batch_input = torch.stack(batch_input_list, dim=0)
 
         batch_input = batch_input.to(device)
