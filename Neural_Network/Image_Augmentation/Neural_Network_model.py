@@ -1,11 +1,11 @@
 import torch
+
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Define the model architecture
 import torch
 import torch.nn as nn
-
 
 
 class CellModel(nn.Module):
@@ -29,8 +29,13 @@ class CellModel(nn.Module):
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=0),
             nn.ReLU(),
             nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=0),
-             # Replace ReLU with Softplus for non-negative output
+            nn.ReLU()
+
         )
+        for m in self.layers.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_uniform_(m.weight, mode='fan_in',
+                                         nonlinearity='relu')
 
     def forward(self, x):
         x = self.layers(x)
