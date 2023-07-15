@@ -1,6 +1,7 @@
 import random
 from torchvision import transforms
 
+
 def augment_image(image_tensor):
     # Convert image tensor to PIL Image
     image = transforms.ToPILImage()(image_tensor)
