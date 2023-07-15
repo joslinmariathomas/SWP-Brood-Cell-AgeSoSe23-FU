@@ -84,12 +84,13 @@ for epoch in range(num_epochs):
         end_idx = start_idx + batch_size
 
         batch_target = shuffled_targets[start_idx:end_idx]
-        batch_input = []
+        batch_input_list = []
 
         for i in range(start_idx, end_idx):
             image_tensor = shuffled_data[i]
             augmented_tensor = augment_image(image_tensor)
-            batch_input.append(augmented_tensor)
+            batch_input_list.append(augmented_tensor)
+        batch_input = torch.stack(batch_input_list,dim=0)
         # Zero the parameter gradients
         optimizer.zero_grad()
 
