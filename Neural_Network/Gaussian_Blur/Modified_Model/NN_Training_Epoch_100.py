@@ -95,9 +95,8 @@ for epoch in range(num_epochs):
         output = model(batch_input)
         output_relu = torch.relu(output)
 
-
         # Calculate the loss
-        loss = criterion(output_relu, batch_target)
+        loss = criterion(output, batch_target)
 
         # Backward pass and optimization
         loss.backward()
@@ -120,8 +119,8 @@ for epoch in range(num_epochs):
             batch_target = validation_targets[start_idx:end_idx]
 
             output = model(batch_input)
-            output_relu = torch.relu(output)
-            loss = criterion(output_relu, batch_target)
+
+            loss = criterion(output, batch_target)
             val_loss += loss.item()
 
         avg_val_loss = val_loss / num_validation_batches
