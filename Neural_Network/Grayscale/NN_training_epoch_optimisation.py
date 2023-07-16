@@ -5,7 +5,7 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 from helper_functions import (import_from_json,export_to_json)
 from Neural_Network_model import CellModel
-from Image_Augmentation import augment_image
+from Grayscale_Augmentation import augment_image
 from torchvision import transforms
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
