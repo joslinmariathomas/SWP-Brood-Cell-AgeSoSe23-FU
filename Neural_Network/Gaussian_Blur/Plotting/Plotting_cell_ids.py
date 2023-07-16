@@ -72,9 +72,9 @@ def train_or_test():
     cell_id = file_name_cell_id.get(filename)["cell_id"]
 
     train_cell_ids = import_from_json(
-        "/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/training_tensor_data/labels/scan_back_220810-044352-utc.json")
+        "/content/SWP-Brood-Cell-AgeSoSe23-FU/training_tensor_data/labels/scan_back_220810-044352-utc.json")
     test_cell_ids = import_from_json(
-        "/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/labels/scan_back_220810-044352-utc.json")
+        "/content/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/labels/scan_back_220810-044352-utc.json")
 
     if cell_id in train_cell_ids:
         index = train_cell_ids.index(cell_id)
