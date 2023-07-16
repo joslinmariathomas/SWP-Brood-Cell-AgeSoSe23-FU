@@ -28,6 +28,7 @@ class CellModel(nn.Module):
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=0),
             nn.ReLU(),
             nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=0),
+            nn.ReLU(),
 
             # Output layer with 1 channel
         )
