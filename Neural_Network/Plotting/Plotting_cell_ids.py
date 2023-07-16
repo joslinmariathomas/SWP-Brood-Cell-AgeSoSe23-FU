@@ -1,6 +1,7 @@
 import os
 import torch
 from helper_functions import import_from_json
+import random
 from datetime import datetime
 import torch
 import os
@@ -10,11 +11,11 @@ import matplotlib.pyplot as plt
 from helper_functions import (import_from_json,export_to_json)
 from Neural_Network.Image_Augmentation.Neural_Network_model_ImAug import CellModel
 # Check for GPU availability
-training_params_folder = '/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Image_Augmentation/Model_Parameters_Img_Aug'
+training_params_folder = '/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Model_Parameters'
 
-row_id = 11
+row_id = random.randint(0, 18)
 
-col_id = 4
+col_id =random.randint(0, 16)
 
 
 full_age_data = import_from_json(
