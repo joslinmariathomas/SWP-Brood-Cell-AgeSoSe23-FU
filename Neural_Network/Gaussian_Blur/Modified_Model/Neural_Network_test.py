@@ -28,7 +28,7 @@ def testing(testing_tensor:torch.tensor,true_ages):
     with torch.no_grad():
         # Pass the test data through the model
         predictions = model(test_data)
-
+        predictions =  torch.relu(predictions)
         loss_criterion = criterion(predictions, true_ages_tensor)
         loss = loss_criterion.item()
 
