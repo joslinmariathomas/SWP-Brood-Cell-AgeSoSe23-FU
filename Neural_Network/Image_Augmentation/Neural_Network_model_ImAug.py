@@ -34,8 +34,7 @@ class CellModel(nn.Module):
         )
         for m in self.layers.modules():
             if isinstance(m, nn.Conv2d):
-                nn.init.kaiming_uniform_(m.weight, mode='fan_in',
-                                         nonlinearity='relu')
+                nn.init.xavier_uniform_(m.weight)
 
     def forward(self, x):
         x = self.layers(x)

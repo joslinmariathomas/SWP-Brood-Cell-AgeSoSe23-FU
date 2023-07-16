@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
 from helper_functions import (import_from_json,export_to_json)
-from Neural_Network_model import CellModel
+from Neural_Network_model_GS import CellModel
 from Grayscale_Augmentation import augment_image
 from torchvision import transforms
 # Check for GPU availability
@@ -60,7 +60,7 @@ training_data = (training_data - data_mean) / data_std
 validation_data = (validation_data - data_mean) / data_std
 
 # Perform training iterations
-num_epochs = 100
+num_epochs = 200
 batch_size = 32  # Choose an appropriate batch size
 num_training_batches = (num_training - 1) // batch_size + 1
 num_validation_batches = (num_validation - 1) // batch_size + 1
