@@ -12,8 +12,9 @@ from Neural_Network.Image_Augmentation.Neural_Network_model_ImAug import CellMod
 # Check for GPU availability
 training_params_folder = '/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Image_Augmentation/Model_Parameters_Img_Aug'
 
-row_id = 8
-cell_id = 4
+row_id = 11
+
+col_id = 4
 
 
 full_age_data = import_from_json(
@@ -25,7 +26,7 @@ file_name_cell_id = {}
 for image in full_age_data:
     filename = image.get("filename")
     cells = image.get("cells")
-    cell_content = cells[row_id][cell_id]
+    cell_content = cells[row_id][col_id]
     cell_content["timestamp"] = image.get("time")
     if cell_content.get("cell_id") is not None:
         file_name_cell_id[filename] = cell_content
@@ -125,7 +126,7 @@ if __name__ == "__main__":
     # Customize plot
     plt.xlabel('Time')
     plt.ylabel('Ages')
-    plt.title('Age Prediction Over Time')
+    plt.title(f'Age Prediction of cell {row_id},{col_id} over Time')
     plt.legend()
 
     # Display the plot

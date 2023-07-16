@@ -1,12 +1,5 @@
 import torch
-
-# Check for GPU availability
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-# Define the model architecture
-import torch
 import torch.nn as nn
-
 
 class CellModel(nn.Module):
     def __init__(self):
@@ -30,13 +23,18 @@ class CellModel(nn.Module):
             nn.ReLU(),
             nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=0),
             nn.ReLU()
-
         )
         for m in self.layers.modules():
             if isinstance(m, nn.Conv2d):
                 nn.init.xavier_uniform_(m.weight)
+            if isinstance(m, nn.Linear):
+                nn.init.xavier_uniform_(m.weight)
+
+        # Add dropout layers
+        self.dropout = nn.Dropout(p=0.5)
 
     def forward(self, x):
         x = self.layers(x)
         x = torch.flatten(x, start_dim=1)
+        x = self.dropout(x)  # Apply dropout
         return x
