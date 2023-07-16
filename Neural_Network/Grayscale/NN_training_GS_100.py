@@ -3,6 +3,8 @@ import random
 import torch.nn as nn
 import torch.optim as optim
 from torchvision import transforms
+
+import torchvision.transforms as T
 import matplotlib.pyplot as plt
 from helper_functions import (import_from_json,export_to_json)
 from Neural_Network_model_GS import CellModel
@@ -126,7 +128,7 @@ for epoch in range(num_epochs):
 
             batch_input_list = []
             for image in batch_input:
-                augmented_tensor = transforms.Grayscale(image)
+                augmented_tensor = T.Grayscale()(augmented_tensor)
                 batch_input_list.append(augmented_tensor)
             batch_input = torch.stack(batch_input_list, dim=0)
             output = model(batch_input)
