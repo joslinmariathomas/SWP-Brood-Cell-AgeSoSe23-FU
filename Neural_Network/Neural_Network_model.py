@@ -29,9 +29,12 @@ class CellModel(nn.Module):
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=0),
             nn.ReLU(),
             nn.Conv2d(64, 1, kernel_size=3, stride=1, padding=0),
-             # Replace ReLU with Softplus for non-negative output
-        )
+            nn.ReLU()
 
+        )
+        for m in self.layers.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.xavier_uniform_(m.weight)
     def forward(self, x):
         x = self.layers(x)
         x = torch.flatten(x, start_dim=1)
