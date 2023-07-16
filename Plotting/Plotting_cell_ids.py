@@ -1,6 +1,7 @@
 import os
 import torch
 from helper_functions import import_from_json
+from datetime import datetime
 import torch
 import os
 import torch.nn as nn
@@ -11,8 +12,9 @@ from Neural_Network.Image_Augmentation.Neural_Network_model_ImAug import CellMod
 # Check for GPU availability
 training_params_folder = '/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Image_Augmentation/Model_Parameters_Img_Aug'
 
-row_id = 7
+row_id = 8
 cell_id = 4
+
 
 full_age_data = import_from_json(
     '/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/full_dataset_with_ages_with_ids.json')
@@ -24,8 +26,11 @@ for image in full_age_data:
     filename = image.get("filename")
     cells = image.get("cells")
     cell_content = cells[row_id][cell_id]
+    cell_content["timestamp"] = image.get("time")
     if cell_content.get("cell_id") is not None:
-        file_name_cell_id[filename] = cells[row_id][cell_id]
+        file_name_cell_id[filename] = cell_content
+
+
 
 
 #
@@ -82,17 +87,20 @@ def train_or_test():
 def get_predictions(folder):
     tensor_list = []
     true_ages = []
+    time = []
     for file in file_name_cell_id:
         file_name_no_ext = os.path.splitext(file)[0]
-        tensor = torch.load(f'{training_folder}/{file_name_no_ext}.pt')
+        tensor = torch.load(f'{folder}/{file_name_no_ext}.pt')
         age = file_name_cell_id.get(file).get("age")
+        timestamp = file_name_cell_id.get(file).get("timestamp")
         true_ages.append(age)
+        time.append(timestamp)
         tensor_list.append(tensor[index])
     tensor_combined = torch.stack(tensor_list, dim=0)
     tensor_combined = tensor_combined
     predictions,loss = testing(testing_tensor=tensor_combined,
                                true_ages=true_ages)
-    return predictions,loss,true_ages
+    return predictions,loss,true_ages,time
 if __name__ == "__main__":
     train_test, index = train_or_test()
 
@@ -100,9 +108,29 @@ if __name__ == "__main__":
         folder = training_folder
     else:
         folder = testing_folder
-    prediction,loss,true_ages = get_predictions(folder)
+    prediction,loss,true_ages,time = get_predictions(folder)
+    converted_times = []
+    for timestamp in time:
+        dt = datetime.fromtimestamp(timestamp)
+        converted_times.append(dt.strftime("%Y-%m-%d"))
 
-    print("done")
+
+    prediction= prediction.tolist()
+    prediction_ages = [round(x[0]) for x in prediction]
+
+    # Plotting
+    plt.plot(time, prediction_ages, label='Prediction Ages')
+    plt.plot(time, true_ages, label='True Ages')
+
+    # Customize plot
+    plt.xlabel('Time')
+    plt.ylabel('Ages')
+    plt.title('Age Prediction Over Time')
+    plt.legend()
+
+    # Display the plot
+    plt.show()
+
 
 
 
