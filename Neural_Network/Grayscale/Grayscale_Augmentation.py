@@ -3,9 +3,10 @@ import torchvision.transforms as T
 
 def augment_image(image_cell,probability:float):
     augmented_tensor =image_cell
+
     if random.random() < probability:
         augmented_tensor = T.GaussianBlur(kernel_size=3, sigma=0.75)(
-            image_cell)
+            augmented_tensor)
 
     if random.random() < probability:
         augmented_tensor = T.RandomAdjustSharpness(sharpness_factor=2)(

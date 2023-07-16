@@ -6,9 +6,12 @@ import matplotlib.pyplot as plt
 from helper_functions import (import_from_json,export_to_json)
 from Neural_Network_model_ImAug import CellModel
 from Image_Augmentation import augment_image
-from torchvision import transforms
 # Check for GPU availability
+random.seed(123)
+torch.manual_seed(123)
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+training_params_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Image_Augmentation/Model_Parameters_Img_Aug/'
 
 model = CellModel().to(device)
 
@@ -25,7 +28,7 @@ tensor_data = torch.load('/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/tr
 # Convert tensor_data into a list of tensors
 tensor_list = list(tensor_data)
 
-# Stack the tensors in the list and mov\e them to the GPU
+# Stack the tensors in the list and move them to the GPU
 batch_tensor = torch.stack(tensor_list).to(device)
 
 # Prepare the target tensor and move to GPU (if applicable)
@@ -52,7 +55,8 @@ validation_targets = validation_targets.to(device)
 # Compute mean and standard deviation of the training data
 data_mean = torch.mean(training_data, dim=0)
 data_std = torch.std(training_data, dim=0)
-
+torch.save(data_mean,f'{training_params_folder}/data_mean.pt')
+torch.save(data_std,f'{training_params_folder}/data_std.pt')
 # Normalize the training data
 training_data = (training_data - data_mean) / data_std
 
@@ -60,7 +64,7 @@ training_data = (training_data - data_mean) / data_std
 validation_data = (validation_data - data_mean) / data_std
 
 # Perform training iterations
-num_epochs = 100
+num_epochs = 50
 batch_size = 32  # Choose an appropriate batch size
 num_training_batches = (num_training - 1) // batch_size + 1
 num_validation_batches = (num_validation - 1) // batch_size + 1
@@ -82,16 +86,14 @@ for epoch in range(num_epochs):
         # Get the current batch
         start_idx = batch_idx * batch_size
         end_idx = start_idx + batch_size
-
         batch_target = shuffled_targets[start_idx:end_idx]
         batch_input = shuffled_data[start_idx:end_idx]
         batch_input_list = []
         for image in batch_input:
-            augmented_tensor = augment_image(image,probability=0.8)
+            augmented_tensor = augment_image(image, probability=0.8)
             batch_input_list.append(augmented_tensor)
         batch_input = torch.stack(batch_input_list, dim=0)
 
-        batch_input = batch_input.to(device)
         # Zero the parameter gradients
         optimizer.zero_grad()
 
@@ -129,15 +131,7 @@ for epoch in range(num_epochs):
         val_losses.append(avg_val_loss)
     print(
         f"Epoch [{epoch + 1}/{num_epochs}], Training Loss: {avg_train_loss:.4f}, Validation Loss: {avg_val_loss:.4f}")
+torch.save(model.state_dict(), f'{training_params_folder}/parameters.pth')
 
-
-# Plot the loss graph
-plt.plot(range(1, len(train_losses) + 1), train_losses, label='Training Loss')
-plt.plot(range(1, len(val_losses) + 1), val_losses, label='Validation Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.title('Training and Validation Loss')
-plt.legend()
-plt.show()
 
 
