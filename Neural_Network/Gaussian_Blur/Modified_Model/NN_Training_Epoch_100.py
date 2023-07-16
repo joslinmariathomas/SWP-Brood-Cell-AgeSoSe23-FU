@@ -97,7 +97,7 @@ for epoch in range(num_epochs):
 
 
         # Calculate the loss
-        loss = criterion(output, batch_target)
+        loss = criterion(output_relu, batch_target)
 
         # Backward pass and optimization
         loss.backward()
