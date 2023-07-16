@@ -19,9 +19,11 @@ if __name__ == "__main__":
     file_name = files[i]
     file_no_ext = os.path.splitext(file_name)[0]
 
-    predictions =  import_from_json(f"../Predictions/Predicted_labels/{file_no_ext}.json")
+    predictions =  import_from_json(
+        f"Predictions/Predicted_labels/{file_no_ext}.json")
     predictions = [round(pred[0],2) for pred in predictions]
-    annotations = import_from_json(f"../Predictions/True_test_labels/{file_no_ext}.json")
+    annotations = import_from_json(
+        f"Predictions/True_test_labels/{file_no_ext}.json")
     annotations = [round(age,2) for age in annotations]
 
     testing_tensor = torch.load(
