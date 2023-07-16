@@ -7,6 +7,8 @@ from helper_functions import (import_from_json,export_to_json)
 from Neural_Network_model_ImAug import CellModel
 from Image_Augmentation import augment_image
 from torchvision import transforms
+random.seed(123)
+torch.manual_seed(123)
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

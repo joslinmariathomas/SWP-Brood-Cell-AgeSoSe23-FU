@@ -31,6 +31,9 @@ class CellModel(nn.Module):
 
             # Output layer with 1 channel
         )
+        for m in self.layers.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.xavier_uniform_(m.weight)
 
     def forward(self, x):
         x = self.layers(x)

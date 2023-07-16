@@ -9,7 +9,8 @@ from Grayscale_Augmentation import augment_image
 from torchvision import transforms as T
 # Check for GPU availability
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+random.seed(123)
+torch.manual_seed(123)
 model = CellModel().to(device)
 
 # Define loss function and optimizer
