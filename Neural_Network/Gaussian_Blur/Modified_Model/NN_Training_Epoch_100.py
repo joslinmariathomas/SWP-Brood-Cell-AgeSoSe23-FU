@@ -93,7 +93,6 @@ for epoch in range(num_epochs):
 
         # Forward pass
         output = model(batch_input)
-        output_relu = torch.relu(output)
 
         # Calculate the loss
         loss = criterion(output, batch_target)

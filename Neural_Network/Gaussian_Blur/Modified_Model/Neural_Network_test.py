@@ -15,9 +15,7 @@ def testing(testing_tensor:torch.tensor,true_ages):
     model.load_state_dict(torch.load(f'{training_params_folder}/parameters.pth'))
     data_mean = torch.load(f'{training_params_folder}/data_mean.pt')
     data_std = torch.load(f'{training_params_folder}/data_std.pt')
-
     true_ages_tensor = torch.tensor(true_ages).unsqueeze(1).to(device)
-
     # Normalize the test data using the mean and standard deviation of the training data
     test_data = testing_tensor.to(device)
     test_data = (test_data - data_mean) / data_std
@@ -52,6 +50,7 @@ if __name__ == "__main__":
         predictions,loss = testing(testing_tensor,true_ages)
         print(f"Loss in file {age_file_name}: {loss}")
         predictions_list = predictions.tolist()
+        predictions_list = [0 if x < 0 else x for x in predictions_list]
         export_to_json(folder = predictions_folder,
                        filename = age_file_name,
                        file=predictions_list)
