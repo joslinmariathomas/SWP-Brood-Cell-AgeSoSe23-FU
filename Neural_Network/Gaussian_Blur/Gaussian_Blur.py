@@ -24,14 +24,17 @@ def apply_gaussian_blur(image_tensor):
     blurred_np[mask] = gaussian_filter(image_np, sigma=blur_amount)[mask]
 
     # Create a circular mask for the central region
-    central_mask = np.sqrt((x - center_x) ** 2 + (y - center_y) ** 2) <= central_blur_radius
+    central_mask = np.sqrt((x - center_x) ** 2 +
+                           (y - center_y) ** 2) <= central_blur_radius
 
     # Apply a lighter Gaussian blur to the central region
     central_blurred_np = np.copy(blurred_np)
-    central_blurred_np[central_mask] = gaussian_filter(image_np, sigma=central_blur_amount)[central_mask]
+    central_blurred_np[central_mask] = gaussian_filter(
+        image_np, sigma=central_blur_amount)[central_mask]
 
     # Convert the blurred numpy array back to a tensor
-    central_blurred_tensor = torch.from_numpy(central_blurred_np).permute(2, 0, 1)
+    central_blurred_tensor = torch.from_numpy(
+        central_blurred_np).permute(2, 0, 1)
 
     return central_blurred_tensor
 
