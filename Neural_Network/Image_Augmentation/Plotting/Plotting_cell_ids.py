@@ -7,6 +7,7 @@ import os
 import torch.nn as nn
 import torch.optim as optim
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from helper_functions import (import_from_json,export_to_json)
 from Neural_Network.Image_Augmentation.Neural_Network_model_ImAug import CellModel
 # Check for GPU availability
@@ -117,19 +118,22 @@ if __name__ == "__main__":
 
 
     prediction= prediction.tolist()
-    prediction_ages = [round(x[0]) for x in prediction]
-
+    prediction_ages = [(x[0]) for x in prediction]
+    numeric_timestamps = mdates.date2num(converted_times)
     # Plotting
-    plt.plot(time, prediction_ages, label='Prediction Ages')
-    plt.plot(time, true_ages, label='True Ages')
-
-    # Customize plot
-    plt.xlabel('Time')
-    plt.ylabel('Ages')
-    plt.title(f'Age Prediction of cell {row_id},{col_id} over Time')
-    plt.legend()
-
-    # Display the plot
+    fig, ax = plt.subplots()
+    ax.plot(numeric_timestamps, prediction_ages, label='Prediction Ages')
+    ax.plot(numeric_timestamps, true_ages, label='True Ages')
+    # boxes over missing time periods
+    plt.axvspan(19222.23611111111, 19226.711203703704, color='grey', alpha=0.5)
+    plt.axvspan(19237.36111111111, 19243.708333333332, color='grey', alpha=0.5)
+    date_format = mdates.DateFormatter('%Y-%m-%d')
+    ax.xaxis.set_major_formatter(date_format)
+    fig.autofmt_xdate()
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Ages')
+    ax.set_title(f'Age Prediction of cell {row_id},{col_id} over Time')
+    ax.legend()
     plt.show()
 
 

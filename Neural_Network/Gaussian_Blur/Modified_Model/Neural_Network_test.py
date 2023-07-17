@@ -50,7 +50,7 @@ if __name__ == "__main__":
         predictions,loss = testing(testing_tensor,true_ages)
         print(f"Loss in file {age_file_name}: {loss}")
         predictions_list = predictions.tolist()
-        predictions_list = [0 if x < 0 else x for x in predictions_list]
+        predictions_list = [[0 if x < 0 else x for x in sublist] for sublist in predictions_list]
         export_to_json(folder = predictions_folder,
                        filename = age_file_name,
                        file=predictions_list)
