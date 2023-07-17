@@ -1,7 +1,8 @@
 import os
 import torch
 from helper_functions import import_from_json
-from datetime import datetime
+from datetime import datetime, timedelta
+
 import torch
 import os
 import torch.nn as nn
@@ -13,13 +14,13 @@ from Neural_Network.Image_Augmentation.Neural_Network_model_ImAug import CellMod
 # Check for GPU availability
 training_params_folder = '/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Image_Augmentation/Model_Parameters_Img_Aug'
 
-row_id = 4
+row_id = 11
 
-col_id = 2
+col_id = 6
 
 
 full_age_data = import_from_json(
-    '/full_dataset_with_ages_with_ids.json')
+    '/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/full_dataset_with_ages_with_ids.json')
 training_folder = "/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/training_tensor_data/tensors"
 testing_folder = "/home/joslin/PycharmProjects/FU/SWP-Brood-Cell-AgeSoSe23-FU/testing_tensor_data/tensors"
 file_name_cell_id = {}
@@ -119,23 +120,31 @@ if __name__ == "__main__":
 
     prediction= prediction.tolist()
     prediction_ages = [(x[0]) for x in prediction]
-    numeric_timestamps = mdates.date2num(converted_times)
+    converted_times = [datetime.fromtimestamp(timestamp) for timestamp in time]
+
     # Plotting
-    fig, ax = plt.subplots()
-    ax.plot(numeric_timestamps, prediction_ages, label='Prediction Ages')
-    ax.plot(numeric_timestamps, true_ages, label='True Ages')
-    # boxes over missing time periods
+    plt.plot(converted_times, prediction_ages, label='Prediction Ages')
+    plt.plot(converted_times, true_ages, label='True Ages')
+
+    # Customize plot
+    plt.xlabel('Time')
+    plt.ylabel('Ages')
+    plt.title(f'Age Prediction Over Time for cell {row_id},{col_id}')
+    plt.legend()
+    ticks = []
+    tick_labels = []
+    current_date = converted_times[0].date()
+    while current_date <= converted_times[-1].date():
+        ticks.append(current_date)
+        tick_labels.append(current_date.strftime('%Y-%m-%d'))
+        current_date += timedelta(days=5)
+
+    plt.xticks(ticks, tick_labels,
+               rotation=22)  # Rotate tick labels by 45 degrees
     plt.axvspan(19222.23611111111, 19226.711203703704, color='grey', alpha=0.5)
     plt.axvspan(19237.36111111111, 19243.708333333332, color='grey', alpha=0.5)
-    date_format = mdates.DateFormatter('%Y-%m-%d')
-    ax.xaxis.set_major_formatter(date_format)
-    fig.autofmt_xdate()
-    ax.set_xlabel('Time')
-    ax.set_ylabel('Ages')
-    ax.set_title(f'Age Prediction of cell {row_id},{col_id} over Time')
-    ax.legend()
+    # Display the plot
     plt.show()
-
 
 
 
