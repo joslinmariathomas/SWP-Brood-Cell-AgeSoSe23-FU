@@ -5,7 +5,7 @@ full_age_data = import_from_json('/content/SWP-Brood-Cell-AgeSoSe23-FU/full_data
 
 
 def get_cell_ids(file_name, cell_id_list,
-                 cell_age_list, filename_list,
+                 cell_age_list, old_label_list,new_label_list,filename_list,
                  train_or_test, labels_id_folder):
     label_file_name = os.path.splitext(file_name)[0]
     cell_ids = import_from_json(f'{labels_id_folder}/{label_file_name}.json')
@@ -15,12 +15,14 @@ def get_cell_ids(file_name, cell_id_list,
                                 age_data=full_age_data,
                                 train_or_test=train_or_test)
     for cell_id in cell_ids:
-        age = get_age(cells_data=cells_data,
+        age,new_label,pred_label = get_age(cells_data=cells_data,
                       cell_identity=cell_id)
         cell_age_list.append(age)
+        old_label_list.append(pred_label)
+        new_label_list.append(new_label)
     cell_id_list.extend(cell_ids)
     filename_list.extend(filenames)
-    return cell_id_list, cell_age_list, filename_list
+    return cell_id_list, cell_age_list, filename_list,old_label_list,new_label_list
 
 
 def get_age(cells_data, cell_identity):
@@ -29,7 +31,9 @@ def get_age(cells_data, cell_identity):
             cell_id = column_cell.get("cell_id")
             if cell_id == cell_identity:
                 age = column_cell.get("age")
-                return age
+                new_label = column_cell.get("new_label")
+                pred_label = column_cell.get("pred_label")
+                return age,new_label,pred_label
 
 
 def get_cells_data(age_data, filename, train_or_test):
@@ -43,15 +47,19 @@ def get_cells_data(age_data, filename, train_or_test):
 def save_tensor_and_ages(train_or_test: str, tensor_folder_path,
                          labels_folder, folder_to_save):
     cell_id_list = []
+    old_label_list = []
+    new_label_list = []
     cell_age_list = []
     model_list = []
     filename_list = []
     for file_name in os.listdir(tensor_folder_path):
         if train_or_test == "test":
             cell_age_list = []
-        cell_id_list, cell_age_list, filename_list = get_cell_ids(
+        cell_id_list, cell_age_list, filename_list,old_label_list,new_label_list = get_cell_ids(
             file_name=file_name, cell_id_list=cell_id_list,
             cell_age_list=cell_age_list,
+            old_label_list=old_label_list,
+            new_label_list=new_label_list,
             train_or_test=train_or_test,
             labels_id_folder=labels_folder,
             filename_list=filename_list)
@@ -61,10 +69,16 @@ def save_tensor_and_ages(train_or_test: str, tensor_folder_path,
             model_list.append(model)
         if train_or_test == "test":
             label_file_name = os.path.splitext(file_name)[0]
-            pred_label_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Predictions/True_test_labels'
+            pred_label_folder = '/content/SWP-Brood-Cell-AgeSoSe23-FU/Neural_Network/Predictions'
             export_to_json(filename=f"{label_file_name}",
-                           folder=pred_label_folder,
+                           folder=f'{pred_label_folder}/True_test_labels',
                            file=cell_age_list)
+            export_to_json(filename=f"{label_file_name}",
+                           folder=f'{pred_label_folder}/Linos_predictions',
+                           file=old_label_list)
+            export_to_json(filename=f"{label_file_name}",
+                           folder=f'{pred_label_folder}/Updated_Labelling',
+                           file=new_label_list)
 
     stacked_model = torch.cat(model_list, dim=0)
     if train_or_test == "train":
